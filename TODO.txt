@@ -1,0 +1,64 @@
+
+ # Project official name: SLIME - Statistical and Linguistic Insights for Model Explanation
+
+ # Do:
+ [x] create new name besides SLIME for pypi (slime-nlp);
+ [x] check dataset.ipynb; 
+ [x] write dataset class docs;
+ [x] check fine-tuning.ipynb; 
+ [x] write fine-tuning class docs;
+ [x] change "interpretability" to "explainability";
+ [x] change BertModel
+ [x] check interpretability.ipynb;
+ [x] remove Dataset Pytorch from CustomDset();
+ [x] batch-size != 1;
+ [x] shuffle in CustomDset;
+ [x] BertTokenizer -> AutoTokenizer¹;
+ [x] BertModel -> AutoModel;
+ [x] CustomBert -> CustomModel;
+ [x] change names in docs/;
+ [x] fitBert -> FitModel;
+ [x] use AutoConfig instead of bert.config;
+ [x] check dataset.py docs;
+ [x] check model.py docs;
+ [x] ExplainBert -> ExplainModel;
+ [x] explain.visualize input data instead to get from file ("text").
+ [x] explain.visualize put a colorbar with legend²;
+ [-] "save explainability" as a method with parameters "data_path", "model_path";
+ [x] improve plots saving; 
+ [x] write explanability class docs;
+ [ ] build statistics analysis class;
+ [ ] write 3th part class docs;
+ [ ] 
+
+
+ ¹ https://huggingface.co/docs/transformers/en/model_doc/auto
+ ² [see visualize_text()] https://github.com/pytorch/captum/blob/master/captum/attr/_utils/visualization.py
+
+
+ # Tasks:
+ [x] fine-tuning Bert for classification task of 2 labels;
+ [x] use integrated gradients for token attributions;
+ [ ] statistic analyses using LIWC output table;
+ [ ]
+
+ # Python packaging: https://py-pkgs.org/01-introduction
+
+ # Reference codes:
+  - fine-tunning Bert: 
+  https://luv-bansal.medium.com/fine-tuning-bert-for-text-classification-in-pytorch-503d97342db2
+  https://wellsr.com/python/fine-tuning-bert-for-sentiment-analysis-with-pytorch/
+
+  - integrated gradients: 
+  https://captum.ai/tutorials/IMDB_TorchText_Interpret
+  https://medium.com/codex/explainable-ai-integrated-gradients-for-deep-neural-network-predictions-eb4f96248afb
+  https://levelup.gitconnected.com/huggingface-transformers-interpretability-with-captum-28e4ff4df234
+ 
+ # Reference book:
+   - https://github.com/rasbt/LLMs-from-scratch?tab=readme-ov-file
+
+ # For future model improviment:
+   - Use Adagrad optimizer with lr=1e-5, lr_sub=1e-3, eps=1e-10 (default);
+   - Add another layer in the classifier sequantial block;
+   - Get the best model as the retrain with train_data + val_data;
+
