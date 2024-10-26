@@ -1,4 +1,4 @@
-from os.path import exists
+import os
 
 from slime_nlp import __version__
 from slime_nlp.dataset import ImportData
@@ -12,7 +12,7 @@ def test_version():
 def test_slime():
     
     # test dataframe import:
-    id = ImportData(path_name="dataframe.csv", verbose=False)
+    id = ImportData(path_name=os.getcwd() + "/tests/dataframe.csv", verbose=False)
     df = id.train
     
     assert df.columns.tolist()[1:] == ["id", "text", "group"], \
@@ -45,5 +45,5 @@ def test_slime():
     # test visualization explanability:
     exp.visualize(df, path_name="test_results.png")
     
-    assert exists('test_results.png'), \
+    assert os.path.exists('test_results.png'), \
     """ExplainModel().visualize() should save the visualization results into test_results.png!"""
