@@ -21,7 +21,7 @@ class CustomModel(nn.Module):
     ----- 
     - pretained_name (str): pretrained model name from huggingface.co repository.
 
-    Returns object with callable model's input. 
+    Returns object with callable model's input.
 
     
     Methods:
@@ -59,13 +59,7 @@ class CustomModel(nn.Module):
         self.max_length = config.max_position_embeddings
         
         self.drop = nn.Dropout(config.hidden_dropout_prob)
-        #self.drop = nn.Dropout(0.5)
-        
-        #seq = [nn.Linear(config.hidden_size, 50)]
-        #seq.append(nn.LeakyReLU())
-        #seq.append(nn.Linear(50, 1))
-        
-        #self.classifier = nn.Sequential(*seq)
+
         self.classifier = nn.Linear(config.hidden_size, 1)
 
     
@@ -76,9 +70,7 @@ class CustomModel(nn.Module):
 
         x = x.pooler_output 
 
-        x = self.drop(x) # 0.1
-
-        # x:(None, 768)
+        x = self.drop(x)
         
         x = self.classifier(x)
         
