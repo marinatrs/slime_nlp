@@ -29,7 +29,9 @@
  [x] write explanability class docs;
  [ ] build statistics analysis class;
  [ ] write 3th part class docs;
- [ ] 
+ [ ] change LICENSE;
+ [ ] correct name SLIME for ... Model Explicability;
+ [ ]  
 
 
  ¹ https://huggingface.co/docs/transformers/en/model_doc/auto
