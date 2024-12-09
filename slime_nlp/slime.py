@@ -1,9 +1,15 @@
 import torch as pt
 import pandas as pd
+import numpy as np
 
 from transformers import AutoConfig, AutoTokenizer
 from captum.attr import LayerIntegratedGradients
 
+from sklearn import metrics
+from statsmodels.distributions.empirical_distribution import ECDF
+
+import seaborn as sns
+import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap, rgb2hex 
 from IPython.display import display, HTML
 from html2image import Html2Image
@@ -62,6 +68,15 @@ class ExplainModel:
       > score (float): the sum of the text's attribution values.
       > attribution (float): token's attribution value.
       > token (str): text's token.
+
+    - stat: (data_path, features, rand_value=5000)
+      -- data_path (str): string with path and dataset name. This file is the LIWC output, 
+      containing ...
+      -- features (List): list of features processed by LIWC for visualization. Use Ellipsis (...)
+      for considering a specific features and the following ones, e.g, features=["BigWords", ...].
+      -- rand_value (int): number of ... 
+      -- results_path (str): string with path and dataframe results's name for saving in .csv file.
+      -- return_results (bool): Boolean variable for resturning the dataframe results.
     
     '''
 
@@ -234,3 +249,123 @@ class ExplainModel:
         if return_results: 
             return output
 
+
+    @staticmethod
+    def stat(data_path, features, rand_value=5000, results_path=None, return_results=False):
+        
+        data = pd.read_csv(data_path)
+        
+        if features[-1] is Ellipsis: user_features = data.loc[:, features[0]:]
+        else: user_features = data.loc[:, features]
+        
+        data = pd.concat([data.id, data.group, data.attribution, user_features], axis=1)
+    
+        feature, AUC_impact, AUC, group, attr, count, percentile, AUC_random = [], [], [], [], [], [], [], []
+        
+        for i in user_features:
+                   
+            feature.append(i)
+            
+            attribute = data.attribution.where(data[i] > 0)
+            
+            count.append(np.sum(data[i]))
+        
+            mask = data[i]
+            
+            mean_attr_rand = [np.mean(data.attribution.where(np.random.permutation(mask) > 0)) 
+                           for _ in range(rand_value)]
+            
+            mean_attr = np.mean(data.attribution.where(mask > 0))
+            
+            attr.append(mean_attr)
+            
+            if (mean_attr > np.percentile(mean_attr_rand, 95)) or (mean_attr < np.percentile(mean_attr_rand, 5)):
+                if mean_attr <= 0: group.append('control')
+                else: group.append('condition')    
+            else:
+                group.append('none')
+        
+            data['temp'] = data.attribution*mask
+            
+            mean = data.groupby(['id']).mean()['temp'].to_numpy()
+            median = data.groupby(['id']).median()['group'].to_numpy()
+            
+            fpr, tpr, thresholds = metrics.roc_curve(median, mean)
+            
+            realp = metrics.auc(fpr, tpr)
+    
+            AUC.append(realp)
+            
+            auc_random_dist = np.zeros(rand_value)
+            
+            for j in range(rand_value):
+                data['temp'] = data.attribution*np.random.permutation(mask)
+                
+                mean = data.groupby(['id']).mean()['temp'].to_numpy()
+                
+                fpr, tpr, thresholds = metrics.roc_curve(median, mean)
+                
+                auc_random_dist[j] = metrics.auc(fpr, tpr)
+            
+            AUC_random.append(np.percentile(auc_random_dist, 50))
+            percentile.append(ECDF(auc_random_dist)(realp))
+            
+            if (realp > np.percentile(auc_random_dist, 95)):
+                AUC_impact.append('positive')
+            elif (realp < np.percentile(auc_random_dist, 5)):
+                AUC_impact.append('negative')
+            else: 
+                AUC_impact.append('none')
+      
+            fig, axs = plt.subplots(2, 2, figsize=(14, 12))
+            
+            sns.set_context(context='paper', font_scale=1.6)
+    
+            # 1st plot: Density plot of feature attribution and random distribution
+            sns.kdeplot(attribute, ax=axs[0, 0], color='#d33932', label=i)
+            sns.kdeplot(data.attribution, ax=axs[0, 0], color='black', linestyle='dashed', label='All')
+            axs[0, 0].set_xlabel('Sample Attribution')
+            axs[0, 0].set_ylabel('Density')
+            axs[0, 0].set_frame_on(False)
+            axs[0, 0].legend(loc='upper right')   
+    
+            # 2nd plot: Histogram of average attribution of random distributions
+            axs[0, 1].hist(mean_attr_rand, bins=30, color='#424243', edgecolor='white', label='Random Permutations')
+            axs[0, 1].axvline(mean_attr, color='#d33932', linewidth=3, label=i)
+            axs[0, 1].set_xlabel('Average Attribution')
+            axs[0, 1].set_ylabel('Count')
+            axs[0, 1].set_frame_on(False)
+            axs[0, 1].legend(loc='best')  
+            
+            # 3rd plot: ROC curve of condition vs control
+            axs[1, 0].plot(fpr, tpr, color='#d33932', lw=3, label=f'Control vs Condition (AUC = {realp:.2f})')
+            axs[1, 0].plot([0, 1], [0, 1], 'k--', label='Chance level (AUC = 0.5)')  # Diagonal line
+            axs[1, 0].set_xlabel('False Positive Rate')
+            axs[1, 0].set_ylabel('True Positive Rate')
+            axs[1, 0].fill_between(fpr, tpr, facecolor='#d33932', alpha=.3)
+            axs[1, 0].set_frame_on(False)
+            axs[1, 0].legend(loc='lower right')
+             
+            # 4th plot: Histogram of AUC values of random distributions
+            axs[1, 1].hist(auc_random_dist, bins=100, color='#424243', edgecolor='white', label='Random permutations')
+            axs[1, 1].axvline(realp, color='#d33932', lw=3, label=i)
+            axs[1, 1].axvline(np.percentile(auc_random_dist, 50), color='#efe74e', lw=3, label='(median)')
+            axs[1, 1].set_xlabel('AUC')
+            axs[1, 1].set_ylabel('Count')
+            axs[1, 1].set_frame_on(False)
+            axs[1, 1].legend(loc='best')    
+            
+            # Final adjustments
+            plt.tight_layout()
+            plt.rcParams['pdf.fonttype'] = 42 
+            plt.show()
+            
+        df_results = pd.DataFrame({'feature': feature, 'AUC_impact': AUC_impact, 'AUC': AUC, 
+                                   'AUC_random': AUC_random, 'percentile': percentile, 
+                                   'count': count, 'group': group, 'attribution': attr})
+    
+        if results_path is not None:
+            df_results.to_csv(results_path, index = False)
+            
+        if return_results: return df_results
+            
