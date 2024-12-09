@@ -27,6 +27,7 @@
  [-] "save explainability" as a method with parameters "data_path", "model_path";
  [x] improve plots saving; 
  [x] write explanability class docs;
+ [ ] incorporate stat() to explanability tutorial;
  [ ] build statistics analysis class;
  [ ] write 3th part class docs;
  [ ] change LICENSE;
