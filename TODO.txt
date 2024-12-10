@@ -30,8 +30,7 @@
  [ ] incorporate stat() to explanability tutorial;
  [ ] build statistics analysis class;
  [ ] write 3th part class docs;
- [ ] change LICENSE;
- [ ] correct name SLIME for ... Model Explicability;
+ [ ] change LICENSE [Marina];
  [ ]  
 
 
@@ -64,4 +63,7 @@
    - Use Adagrad optimizer with lr=1e-5, lr_sub=1e-3, eps=1e-10 (default);
    - Add another layer in the classifier sequantial block;
    - Get the best model as the retrain with train_data + val_data;
+
+
+
 
