@@ -34,6 +34,7 @@
  [ ] write README [Marina];
  [ ] review docs [Marina];
  [ ] select best example(s) for docs [Marina];
+ [ ] remove ArXiv reference from README;
  [ ]
 
  # TO USE slime_nlp IN DOCS:
