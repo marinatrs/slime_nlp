@@ -31,7 +31,10 @@
  [ ] build statistics analysis class;
  [ ] write 3th part class docs;
  [ ] change LICENSE [Marina];
- [ ]  
+ [ ] write README [Marina];
+ [ ] review docs [Marina];
+ [ ] select best example(s) for docs [Marina];
+ [ ] 
 
 
  ¹ https://huggingface.co/docs/transformers/en/model_doc/auto
