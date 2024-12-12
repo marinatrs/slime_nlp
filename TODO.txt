@@ -34,7 +34,12 @@
  [ ] write README [Marina];
  [ ] review docs [Marina];
  [ ] select best example(s) for docs [Marina];
- [ ] 
+ [ ]
+
+ # TO USE slime_nlp IN DOCS:
+ - insert the following lines before call slime_nlp function:
+ >>> import sys
+ >>> sys.path.insert(0, '../slime_nlp/') 
 
 
  ¹ https://huggingface.co/docs/transformers/en/model_doc/auto
