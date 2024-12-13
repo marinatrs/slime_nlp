@@ -29,11 +29,12 @@
  [x] write explanability class docs;
  [ ] incorporate stat() to explanability tutorial;
  [ ] build statistics analysis class;
- [ ] write 3rd part class docs;
+ [ ] write 3th part class docs;
  [ ] change LICENSE [Marina];
  [ ] write README [Marina];
  [ ] review docs [Marina];
- [x] select best example(s) for docs [Marina];
+ [ ] select best example(s) for docs [Marina];
+ [ ] remove ArXiv reference from README;
  [ ]
 
  # TO USE slime_nlp IN DOCS:
