@@ -111,7 +111,7 @@ class FitModel:
     -----
     - device (str): select CPU or GPU for training.
     - optimizer (str): training optimizer name.
-    - lr (float): learning-rate for AutoModel' LLM weights adjustment.
+    - lr (float): learning-rate for AutoModel's LLM weights adjustment.
     - lr_sub (float): learning-rate for weights adjustment of the CustomModel's 
     additional layer block.
     - eps (float): optimizer constant for numerical stability.
@@ -135,9 +135,9 @@ class FitModel:
       -- klabel (str): string argument for kfold() method.
       -- path_name (srt): path and model name string for saving.
       -- patience (int): number of epochs to wait for the early-stop mechanism. For
-      patience=0, the early-stop is not consider.
+      patience=0, the early-stop is not considered.
       -- min_delta (float): tolerance value above the best metric result during the training. 
-      If no improvement is achieved, the training the stopped.
+      If no improvement is achieved, the training is stopped.
 
     - kfold (data, K=2, epochs=1, batch_size=1, model_name=None, pretrained_name="google-bert/bert-base-cased"):
       -- data (Dataframe): pandas dataframe (ImportData's output) with "text"(str) 

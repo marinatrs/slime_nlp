@@ -9,10 +9,10 @@ class ImportData:
     
     Input: (path_name, n_val=None, n_test=None, group_by=None, verbose=True)
     -----
-    - path_name (str): string with the path and data name.
+    - path_name (str): string with path and data name.
     - n_val (float): quantile of validation data.
     - n_test (float): quantile of test data.
-    - group_by (List[str]): list of the dataframe's column names to be grouped.
+    - group_by (List[str]): list of the dataframe's column names to group by.
     - verbose (bool): boolean variable to print dataset info.
 
 

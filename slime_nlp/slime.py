@@ -57,26 +57,26 @@ class ExplainModel:
     
     - attribution_by_token: (data, path_name=None, return_results=False):
       -- data (DataFrame): pandas dataframe with "id", "text", and "group" columns.
-      -- path_name (str): string with the path and dataframe's name for saving.
+      -- path_name (str): string with path and dataframe's names for saving.
       -- return_results (bool): boolean variable for returning dataframe.
     
       Returns a dataframe with 
       > id (str): text's ID.
       > condition (str): string to indicate "condition" or "control" group.
       > group (int): integer corresponding to the condition label (0 or 1).
-      > pred_label (int): model's predition group (0 or 1).
+      > pred_label (int): model's prediction group (0 or 1).
       > score (float): the sum of the text's attribution values.
       > attribution (float): token's attribution value.
-      > token (str): text's token.
+      > token (str): token.
 
     - stat: (data_path, features, rand_value=5000)
-      -- data_path (str): string with path and dataset name. This file is the LIWC output, 
-      containing ...
-      -- features (List): list of features processed by LIWC for visualization. Use Ellipsis (...)
-      for considering a specific features and the following ones, e.g, features=["BigWords", ...].
-      -- rand_value (int): number of ... 
-      -- results_path (str): string with path and dataframe results's name for saving in .csv file.
-      -- return_results (bool): Boolean variable for resturning the dataframe results.
+      -- data_path (str): string with path and dataset name. This file is the user-dependent tagger output, 
+      containing columns for tokens and associated features.
+      -- features (List): list of features processed by the user-dependent tagger for visualization. Use Ellipsis (...)
+      for considering an specific feature and its following ones, e.g, features=["BigWords", ...].
+      -- rand_value (int): number of random subsamples of data. 
+      -- results_path (str): string with path and dataframe results' name for saving in .csv file.
+      -- return_results (bool): Boolean variable for returning the dataframe results.
     
     '''
 
