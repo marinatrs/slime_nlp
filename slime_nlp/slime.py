@@ -10,7 +10,10 @@ from statsmodels.distributions.empirical_distribution import ECDF
 
 import seaborn as sns
 import matplotlib.pyplot as plt
-from matplotlib.colors import LinearSegmentedColormap, rgb2hex 
+from matplotlib.lines import Line2D
+import matplotlib.patches as mpatches
+from matplotlib.colors import LinearSegmentedColormap, rgb2hex
+
 from IPython.display import display, HTML
 from html2image import Html2Image
 
@@ -69,13 +72,13 @@ class ExplainModel:
       > attribution (float): token's attribution value.
       > token (str): token.
 
-    - stat: (data_path, features, rand_value=5000)
-      -- data_path (str): string with path and dataset name. This file is the user-dependent tagger output, 
+    - stat: (path_data, features, rand_value=5000)
+      -- path_data (str): string with path and dataset name. This file is the user-dependent tagger output, 
       containing columns for tokens and associated features.
       -- features (List): list of features processed by the user-dependent tagger for visualization. Use Ellipsis (...)
       for considering an specific feature and its following ones, e.g, features=["BigWords", ...].
       -- rand_value (int): number of random subsamples of data. 
-      -- results_path (str): string with path and dataframe results' name for saving in .csv file.
+      -- path_results (str): string with path and dataframe results' name for saving in .csv file.
       -- return_results (bool): Boolean variable for returning the dataframe results.
     
     '''
@@ -208,7 +211,7 @@ class ExplainModel:
             display(HTML(html))
 
     
-    def attribution_by_token(self, data, path_name=None, return_results=False):
+    def attribution_by_token(self, data, path_name=None, path_plot=None, return_results=False):
     
         N = len(data)
         output = pd.DataFrame()
@@ -242,18 +245,144 @@ class ExplainModel:
             print(f"Processing: {100*(n+1)/N:.1f}%", end='\r', flush=True)
         
         output = output.set_index("id")
-        
+
         if path_name is not None:
             output.to_csv(path_name)
-            
+
+        # NOTE: remove path_plot variable if plots are not possible here!!!!!!
+        #if path_plot is not None: 
+        #    n = path_plot.split(".")
+        #    
+        #    path_scatter = ".".join(n[:-1]) + "_scatter." + n[-1]
+        #    path_bars = ".".join(n[:-1]) + "_bars." + n[-1]
+        #    
+        #    self.plot_scatter(path_name, path_plot=path_scatter)
+        #    self.plot_bars(path_name, path_plot=path_bars)
+
         if return_results: 
             return output
 
+    
+    @staticmethod
+    def plot_scatter(path_data, path_plot=None):
+    
+        data = pd.read_csv(path_data)
+        
+        plt.figure(figsize=(14, 9), facecolor='white')
+        sns.set_theme(context='talk', style='white')
+        
+        markers = {"control": "o", "none": "s", "AD": "X"}
+        custom_palette = {'positive': 'green', 'negative': 'gray', 'none': 'gray'}
+        
+        sns.scatterplot(data=data, x='attribution', y='AUC_diff', hue='AUC_impact', style="group",
+                        markers=markers, palette=custom_palette, s=200)
+        
+        plt.axhline(0, color='gray', linestyle='--', linewidth=1)
+        plt.axvline(0, color='gray', linestyle='--', linewidth=1)
+        
+        plt.annotate('Control', xy=(data['attribution'].min(), 0), xycoords='data', 
+                     xytext=(-70, -5), textcoords='offset points', ha='center', color='gray')
+        
+        plt.annotate('Condition', xy=(data['attribution'].max(), 0), xycoords='data', 
+                     xytext=(80, -5), textcoords='offset points', ha='center', color='gray')
+        
+        plt.annotate('Help classification', xy=(0, data['AUC_diff'].max()), xycoords='data', 
+                     xytext=(5, 40), textcoords='offset points', ha='center', color='gray')
+        
+        plt.annotate('Worsen classification', xy=(0, data['AUC_diff'].min()), xycoords='data', 
+                     xytext=(5, -40), textcoords='offset points', ha='center', color='gray')
+        
+        labels = data.feature
+        for i in range(len(data.feature)):
+            if data.AUC_impact[i] == 'positive':
+                plt.annotate(labels[i], (data.attribution[i], data.AUC_diff[i]), 
+                             textcoords="offset points", xytext=(0,10), ha='center')
+        
+        plt.xlabel('Attribution')
+        plt.ylabel('AUC Difference')
+        
+        plt.grid(False)
+        plt.axis('off')
+        
+        legend_elements = [
+            Line2D([0], [0], marker='o', color='w', label='Significant increase of AUC', markerfacecolor='green', markersize=10),
+            Line2D([0], [0], marker='o', color='w', label='Control', markerfacecolor='gray', markersize=10),
+            Line2D([0], [0], marker='X', color='w', label='Condition', markerfacecolor='gray', markersize=10),
+            Line2D([0], [0], marker='s', color='w', label='None', markerfacecolor='gray', markersize=10)
+        ]
+        
+        plt.legend(handles=legend_elements, loc='best', frameon=False)
+        plt.rcParams['pdf.fonttype'] = 42
+        
+        if path_plot is not None: plt.savefig(path_plot, dpi=300)
+        else: plt.show()
+    
 
     @staticmethod
-    def stat(data_path, features, rand_value=5000, results_path=None, return_results=False):
+    def plot_bars(path_data, path_plot=None):
+    
+        data = pd.read_csv(path_data)
+            
+        sns.set_theme(context='talk', style='white') 
         
-        data = pd.read_csv(data_path)
+        def get_color(row):
+            base_color = {'AD': '#e2a8a7', 'none': '#7b7b7b', 'control': '#73949e'}
+            alpha = 1.0 if row['AUC_impact'] == 'positive' else 0.7
+            return base_color[row['group']], alpha
+    
+        patches = [mpatches.Patch(color='#e2a8a7', label='condition'),
+                   mpatches.Patch(color='#7b7b7b', label='none'),
+                   mpatches.Patch(color='#73949e', label='control'),
+                   mpatches.Patch(facecolor = 'white', edgecolor='black', label='Significant AUC increase')]
+        
+        fig, ax = plt.subplots(1, 2, figsize=(10,12)) 
+        
+        filtered_data = data[(data['attribution'] != 0) & (~data['attribution'].isna())]
+        N = len(filtered_data)
+        
+        for i in [0, 1]:
+        
+            sorted_data = filtered_data.sort_values(by='attribution', ascending=False)
+            sorted_data = sorted_data[i*N//2:(i+1)*N//2]
+            
+            colors, alphas = zip(*sorted_data.apply(get_color, axis=1))
+            
+            bars = sns.barplot(data=sorted_data, y='feature', x='attribution', ax=ax[i])
+            
+            for bar, color, alpha in zip(bars.patches, colors, alphas):
+                bar.set_color(color)
+                bar.set_alpha(alpha)
+    
+                edge_color = 'black' if alpha == 1.0 else 'gray'
+                
+                bar.set_edgecolor(edge_color)
+                bar.set_linewidth(1)  
+    
+            if i == 1:
+                ax[i].yaxis.tick_right()
+                ax[i].tick_params(right=False)
+                
+            bars.set(xlabel='', ylabel='') 
+            bars.set(xticks=[]) 
+    
+            ax[i].spines['top'].set_visible(False)
+            ax[i].spines['bottom'].set_visible(False)
+            ax[i].spines['right'].set_visible(False)
+            ax[i].spines['left'].set_visible(False)
+        
+        plt.legend(handles=patches, bbox_to_anchor=(0.0, 0.6))
+        
+        plt.rcParams['pdf.fonttype'] = 42
+        plt.tight_layout()
+                
+        if path_plot is not None: plt.savefig(path_plot, dpi=300)
+        else: plt.show()
+
+
+    @staticmethod
+    def stat(path_data, features, rand_value=5000, path_results=None, path_plot=None, return_results=False):
+        
+        data = pd.read_csv(path_data)
         
         if features[-1] is Ellipsis: user_features = data.loc[:, features[0]:]
         else: user_features = data.loc[:, features]
@@ -263,7 +392,7 @@ class ExplainModel:
         feature, AUC_impact, AUC, group, attr, count, percentile, AUC_random = [], [], [], [], [], [], [], []
         
         for i in user_features:
-                   
+            
             feature.append(i)
             
             attribute = data.attribution.where(data[i] > 0)
@@ -273,7 +402,7 @@ class ExplainModel:
             mask = data[i]
             
             mean_attr_rand = [np.mean(data.attribution.where(np.random.permutation(mask) > 0)) 
-                           for _ in range(rand_value)]
+                              for _ in range(rand_value)]
             
             mean_attr = np.mean(data.attribution.where(mask > 0))
             
@@ -358,14 +487,22 @@ class ExplainModel:
             # Final adjustments
             plt.tight_layout()
             plt.rcParams['pdf.fonttype'] = 42 
-            plt.show()
+
+            if path_plot is not None: 
+                n = path_plot.split(".")
+                path_plot = ".".join(n[:-1]) + f"_{i}." + n[-1]
+                
+                plt.savefig(path_plot)
+                
+            else: 
+                plt.show()
             
         df_results = pd.DataFrame({'feature': feature, 'AUC_impact': AUC_impact, 'AUC': AUC, 
                                    'AUC_random': AUC_random, 'percentile': percentile, 
                                    'count': count, 'group': group, 'attribution': attr})
     
-        if results_path is not None:
-            df_results.to_csv(results_path, index = False)
+        if path_results is not None:
+            df_results.to_csv(path_results, index = False)
             
         if return_results: return df_results
-            
+
