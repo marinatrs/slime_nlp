@@ -87,11 +87,9 @@ class CustomModel(nn.Module):
     def predict(self, data):
     
         self.eval()
+            
+        dset = CustomDset(data, max_length=self.max_length, device=self.__device)
     
-        device = next(self.parameters()).device
-        
-        dset = CustomDset(data, self.max_length, self.__device)
-        
         pred = []
         for X, y in dset:        
             y_pred = self(*X)
@@ -469,3 +467,4 @@ class FitModel:
         	os.makedirs("./weights/") 
 
         pt.save(self.model.state_dict(), path_name)
+
