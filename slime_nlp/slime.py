@@ -18,37 +18,67 @@ from .model import CustomModel
 
 class ExplainModel:
 
-    """
-    ExplainModel: A toolkit for model explainability, data processing, and visualization.
-
-    Parameters:
-    ----------
-    model_name : str, optional
-        Path and name of the model to load. Default is None.
-    device : str, optional
-        Device to run the model and computations on ('cpu', 'cuda', or 'gpu'). Defaults to 'cpu'.
-    n_steps : int, optional
-        Number of steps for the Integrated Gradients approximation. Default is 50.
-    pretrained_name : str, optional
-        Pretrained model identifier from Hugging Face's model hub. Defaults to "google-bert/bert-base-cased".
-
+    '''
+    # ExplainModel: model explanability tools for data processing and visualization.
+    
+    Input: (model_name=None, device='cpu', n_steps=50, pretrained_name="google-bert/bert-base-cased")
+    -----
+    - model_name (str): string with the path and model's name.
+    - device (str): select CPU or GPU device for output tensors.
+    - n_steps (int): number of steps for Integrated Gradient approximation.
+    - pretained_name (str): pretrained model name from huggingface.co repository.
+    
+    
     Methods:
     -------
-    explain(text: str) -> Dict[str, Any]
-        Generates token-level attributions for the input text using Integrated Gradients.
+    - explain: (text)
+      -- text (str): text as string format.
+    
+      Returns a dictionary with 
+      > input_ids (Tensor[int]): sequence of special tokens IDs.
+      > token_list (List[str]): of tokens.
+      > attributions (Tensor[float]): Integrated Gradient's attribution score by token.
+      > delta (Tensor[float]): Integrated Gradient's error metric.
+    
+    - model_prediction: (input_ids)
+      -- input_ids (Tensor): sequence of special tokens IDs.
+    
+      Returns a dictionary with
+      > prob (float): classification probability score in [0, 1].
+      > class (int): classification integer score 0 or 1.
+    
+    - visualize: (data, cmap_size=20, colors=["#73949e", "white", "#e2a8a7"], path_name=None)
+      -- data (DataFrame): pandas dataframe with "text" and "group" columns.
+      -- cmap_size (int): color-map discretization size.
+      -- colors (List[str]): list of color in hex for color-map.
+      -- path_name (str): string with the path and figure's name for output saving.
+    
+      Returns the tokenized text with attribution score by token.
+    
+    - attribution_by_token: (data, path_name=None, return_results=False):
+      -- data (DataFrame): pandas dataframe with "id", "text", and "group" columns.
+      -- path_name (str): string with the path and dataframe's name for saving.
+      -- return_results (bool): boolean variable for returning dataframe.
+    
+      Returns a dataframe with 
+      > id (str): text's ID.
+      > condition (str): string to indicate "condition" or "control" group.
+      > group (int): integer corresponding to the condition label (0 or 1).
+      > pred_label (int): model's predition group (0 or 1).
+      > score (float): the sum of the text's attribution values.
+      > attribution (float): token's attribution value.
+      > token (str): text's token.
 
-    model_prediction(input_ids: Tensor) -> Dict[str, Any]
-        Produces the model's prediction probabilities and class labels.
-
-    visualize(data: pd.DataFrame, cmap_size: int = 20, colors: List[str] = [...], path_name: str = None)
-        Visualizes token-level attributions for a dataset and saves the results as images.
-
-    attribution_by_token(data: pd.DataFrame, path_name: str = None, return_results: bool = False) -> pd.DataFrame
-        Computes and returns a DataFrame with token-level attributions and optional saved output.
-
-    stat(data_path: str, features: List[str], rand_value: int = 5000, results_path: str = None, return_results: bool = False) -> pd.DataFrame
-        Performs statistical analysis on feature-level attributions and saves the results if specified.
-    """
+    - stat: (data_path, features, rand_value=5000)
+      -- data_path (str): string with path and dataset name. This file is the LIWC output, 
+      containing ...
+      -- features (List): list of features processed by LIWC for visualization. Use Ellipsis (...)
+      for considering a specific features and the following ones, e.g, features=["BigWords", ...].
+      -- rand_value (int): number of ... 
+      -- results_path (str): string with path and dataframe results's name for saving in .csv file.
+      -- return_results (bool): Boolean variable for resturning the dataframe results.
+    
+    '''
 
     def __init__(self, model_name=None, device='cpu', n_steps=50, pretrained_name="google-bert/bert-base-cased"):
 
