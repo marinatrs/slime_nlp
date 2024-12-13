@@ -28,14 +28,16 @@
  [x] improve plots saving; 
  [x] write explanability class docs;
  [x] incorporate stat() to explanability tutorial;
- [ ] build statistics analysis class;
+ [x] build statistics analysis class;
  [x] write 3rd part class docs;
- [ ] change LICENSE [Marina];
- [ ] write README [Marina];
  [x] review docs [Marina];
  [x] select best example(s) for docs [Marina];
  [ ] remove ArXiv reference from README;
+ [ ] change LICENSE [Marina];
+ [ ] write README [Marina];
  [ ] check tests/;
+ [ ] check requirements for pyproject.toml;
+ [ ]
 
  # TO USE slime_nlp IN DOCS:
  - insert the following lines before call slime_nlp function:
