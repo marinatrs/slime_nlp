@@ -27,7 +27,7 @@
  [-] "save explainability" as a method with parameters "data_path", "model_path";
  [x] improve plots saving; 
  [x] write explanability class docs;
- [ ] incorporate stat() to explanability tutorial;
+ [x] incorporate stat() to explanability tutorial;
  [ ] build statistics analysis class;
  [x] write 3rd part class docs;
  [ ] change LICENSE [Marina];
@@ -35,11 +35,12 @@
  [x] review docs [Marina];
  [x] select best example(s) for docs [Marina];
  [ ] remove ArXiv reference from README;
+ [ ] check tests/;
 
  # TO USE slime_nlp IN DOCS:
  - insert the following lines before call slime_nlp function:
  >>> import sys
- >>> sys.path.insert(0, '../') 
+ >>> sys.path.insert(0, '../slime_nlp/') 
 
 
  ¹ https://huggingface.co/docs/transformers/en/model_doc/auto
