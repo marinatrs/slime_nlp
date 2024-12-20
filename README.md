@@ -8,7 +8,7 @@ Slime is a ...
 
 ## Installation
 
-To install SLIME, we can use the pip [command](https://pypi.org/project/grav-waldo/):
+To install SLIME, we can use pip [command](https://pypi.org/project/grav-waldo/):
 
 ```bash
 pip install slime_nlp
@@ -23,10 +23,6 @@ The project is composed of three main [codes](https://github.com/marinatrs/slime
 
 Check the tutorials in [docs](https://github.com/marinatrs/slime_nlp/tree/main/docs).
 
-## Reference
-
-__SLIME's paper:__ [A Methodology for Explainable Large Language Models with Integrated Gradients and Linguistic Analysis in Text Classification](https://arxiv.org/abs/2410.00250)
-
-#### About the author
+#### About the authors
 - [[ORCID] Marina Ribeiro](https://orcid.org/0000-0002-2516-3135)
 - [[ORCID] Tibério Pereira](https://orcid.org/0000-0003-1856-6881)
