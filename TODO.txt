@@ -35,6 +35,7 @@
  [x] remove ArXiv reference from README;
  [x] change LICENSE [Marina];
  [ ] write README [Marina];
+ [ ] change font from stat plot;
  [ ] check tests/;
  [ ] check requirements for pyproject.toml;
  [ ]
