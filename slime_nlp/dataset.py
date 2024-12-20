@@ -7,12 +7,13 @@ class ImportData:
     '''
     # ImportData: import dataframe and split it into train, validation, and test data.
     
-    Input: (path_name, n_val=None, n_test=None, group_by=None, verbose=True)
+    Input: (path_name, n_val=None, n_test=None, group_by=None, shuffle=True, verbose=True)
     -----
     - path_name (str): string with path and data name.
     - n_val (float): quantile of validation data.
     - n_test (float): quantile of test data.
     - group_by (List[str]): list of the dataframe's column names to group by.
+    - shuffle (bool): boolean variable to allow dataframe shuffling.
     - verbose (bool): boolean variable to print dataset info.
 
 
@@ -24,13 +25,15 @@ class ImportData:
       
     '''
     
-    def __init__(self, path_name, n_val=None, n_test=None, group_by=None, verbose=True):
+    def __init__(self, path_name, n_val=None, n_test=None, group_by=None, shuffle=True, verbose=True):
 
         df = pd_csv(path_name)
 
         if group_by: df = df[group_by]
             
-        self.df = df.sample(frac=1)
+        if shuffle: self.df = df.sample(frac=1)
+        else: self.df = df
+            
         N = len(df)
         
         if n_val: self.N_val = int(N*n_val)
@@ -133,3 +136,4 @@ class CustomDset:
         label = pt.Tensor([label]).T.to(self._device)
         
         return (input_ids, token_type_ids, attention_mask), label
+
