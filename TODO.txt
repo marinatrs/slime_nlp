@@ -33,7 +33,7 @@
  [x] review docs [Marina];
  [x] select best example(s) for docs [Marina];
  [x] remove ArXiv reference from README;
- [ ] change LICENSE [Marina];
+ [x] change LICENSE [Marina];
  [ ] write README [Marina];
  [ ] check tests/;
  [ ] check requirements for pyproject.toml;
