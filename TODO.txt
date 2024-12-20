@@ -36,6 +36,7 @@
  [x] change LICENSE [Marina];
  [ ] write README [Marina];
  [ ] change font from stat plot;
+ [ ] add stat docs string;
  [ ] check tests/;
  [ ] check requirements for pyproject.toml;
  [ ]
