@@ -151,6 +151,7 @@ class ExplainModel:
     
     def visualize(self, data, cmap_size=20, colors=["#73949e", "white", "#e2a8a7"], path_name=None):
 
+        ids = data['id'].tolist()
         texts = data['text'].tolist()
         groups = data['group'].tolist()
         
@@ -158,7 +159,7 @@ class ExplainModel:
         cmap = LinearSegmentedColormap.from_list("custom_cmap", colors, N=cmap_size)
         color_range = [rgb2hex(cmap(i)) for i in range(cmap_size)]
 
-        for text, group in zip(texts, groups):
+        for ID, text, group in zip(ids, texts, groups):
             exp = self.explain(text)
             pred = self.model_prediction(exp['input_ids'])
                         
@@ -204,7 +205,10 @@ class ExplainModel:
             if path_name is not None:
                 pn = path_name.split("/")
                 path, name = "/".join(pn[:-1]), pn[-1]
-                
+
+                n = name.split(".")
+                name = "".join(n[:-1]) + f"_{ID}." + n[-1]
+                                
                 hti = Html2Image(size=(500, 400), output_path=path)            
                 hti.screenshot(html_str=html, save_as=name)
                 
@@ -216,7 +220,7 @@ class ExplainModel:
         N = len(data)
         output = pd.DataFrame()
         
-        ids = data['id'].tolist()
+        ids = data['ids'].tolist()
         groups = data['group'].tolist()
         texts = data['text'].tolist()
         
