@@ -32,7 +32,7 @@
  [x] write 3rd part class docs;
  [x] review docs [Marina];
  [x] select best example(s) for docs [Marina];
- [ ] remove ArXiv reference from README;
+ [x] remove ArXiv reference from README;
  [ ] change LICENSE [Marina];
  [ ] write README [Marina];
  [ ] check tests/;
