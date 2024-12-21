@@ -1,0 +1,6 @@
+,id,group,condition,attribution,token,label,score,feature
+0,S001,0,condition,-0.04,this,LABEL_0,2.3e-05,1
+1,S001,1,control,0.02,is,LABEL_0,5.7e-05,1
+2,S001,1,control,-0.12,a,LABEL_0,3.5e-05,0
+3,S001,0,condition,0.09,good,LABEL_0,1.8e-05,0
+4,S001,0,condition,0.63,example,LABEL_0,7.2e-05,1
