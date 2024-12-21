@@ -37,6 +37,7 @@
  [ ] write README [Marina];
  [ ] change font from stat plot;
  [ ] add stat docs string;
+ [ ] change ExplainModel name;
  [ ] check tests/;
  [ ] check requirements for pyproject.toml;
  [ ]
