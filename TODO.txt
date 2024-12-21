@@ -42,6 +42,9 @@
  [ ] check requirements for pyproject.toml;
  [ ]
 
+
+ - to removeremote file: git rm --cached "file"
+
  # TO USE slime_nlp IN DOCS:
  - insert the following lines before call slime_nlp function:
  >>> import sys
