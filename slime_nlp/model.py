@@ -85,7 +85,15 @@ class CustomModel(nn.Module):
         
         
     def predict(self, data):
-    
+
+        '''
+        - predict: (data)
+          -- data (Dataframe): pandas dataframe (ImportData's output) with "text"(str) 
+          and "group"(int) columns.
+
+          Returns (Tensor[float]) a tensor with prediction scalars (0, 1).
+        '''
+        
         self.eval()
             
         dset = CustomDset(data, max_length=self.max_length, device=self.__device)
@@ -208,6 +216,23 @@ class FitModel:
     def fit(self, train_data, val_data=None, epochs=1, batch_size=1, pretrained_name="google-bert/bert-base-cased",
             klabel='', path_name=None, patience=0, min_delta=1e-2):
 
+        '''
+        - fit (train_data, val_data=None, epochs=1, batch_size=1, pretrained_name="google-bert/bert-base-cased",
+        klabel='', path_name=None, patience=0, min_delta=1e-2):
+          -- train_data (Dataframe): pandas dataframe (ImportData's output) with "text"(str) 
+          and "group"(int) columns.
+          -- val_data (Dataframe): equivalent to train_data.
+          -- epochs (int): number of epochs for training.
+          -- batch_size (int): data batch-size value.
+          -- pretained_name (str): pretrained model name from huggingface.co repository.
+          -- klabel (str): string argument for kfold() method.
+          -- path_name (srt): path and model name string for saving.
+          -- patience (int): number of epochs to wait for the early-stop mechanism. For
+          patience=0, the early-stop is not considered.
+          -- min_delta (float): tolerance value above the best metric result during the training. 
+          If no improvement is achieved, the training is stopped.
+          
+        '''
         # set model:
         self.model = CustomModel(pretrained_name).to(self._device)
         config = AutoConfig.from_pretrained(pretrained_name)
@@ -309,6 +334,18 @@ class FitModel:
             
     def kfold(self, data, K=2, epochs=1, batch_size=1, model_name=None, pretrained_name="google-bert/bert-base-cased"):
 
+        '''
+        - kfold (data, K=2, epochs=1, batch_size=1, model_name=None, pretrained_name="google-bert/bert-base-cased"):
+          -- data (Dataframe): pandas dataframe (ImportData's output) with "text"(str) 
+          and "group"(int) columns.
+          -- K (int): number of folds for cross-validation.
+          -- epochs (int): number of epochs for each cross-validation loop.
+          -- batch_size (int): data batch-size value.
+          -- model_name (srt): path and model name string for saving.
+          -- pretained_name (str): pretrained model name from huggingface.co repository.
+          
+        '''
+        
         N = len(data)
         N_val = N//K
         
@@ -341,7 +378,15 @@ class FitModel:
 
     
     def plot_metric(self, path_name=None):
-    
+
+        '''
+        - plot_metric (path_name=None):
+          -- path_name (srt): path and plot name string for saving.
+          
+          Returns the plot of the loss function values and metrics during training.
+            
+        '''
+        
         val_size = self.val_metric1.shape[0]
         epochs = pt.arange(1, self.train_loss.shape[-1] + 1)
     
@@ -413,6 +458,12 @@ class FitModel:
 
     
     def fold_evaluation(self):
+
+        '''
+        - fold_evaluation:
+          Evaluates the performance of the K-fold cross-validation.
+    
+        '''
     
         val_mean1 = self.val_metric1.mean(1)
         val_mean2 = self.val_metric2.mean(1)
@@ -441,7 +492,16 @@ class FitModel:
                     
     
     def evaluate(self, data):
+
+        '''
+        - evaluate (data):
+          -- data (Dataframe): pandas dataframe (ImportData's output) with "text"(str) 
+          and "group"(int) columns.
     
+          Returns the mean values of the F1-score and Accuracy metrics. 
+
+        '''
+        
         dset = CustomDset(data, **self.dset_info)
         
         val = []
@@ -463,6 +523,14 @@ class FitModel:
     
     def save(self, path_name="weights/model_weights.pt"):
 
+        '''
+        - save (path_name="weights/model_weights.pt"):
+          -- model_name (srt): path and model name string for saving.
+    
+          Creates the "weights" directory and saves the model's inner parameters.
+    
+        '''
+        
         if not os.path.exists("./weights/"): 
         	os.makedirs("./weights/") 
 
