@@ -10,6 +10,6 @@ setup(name='SLIME-NLP',
       packages=['slime_nlp'],
       classifiers=["Programming Language :: Python :: 3",
                    "Operating System :: OS Independent"], 
-      #install_requires=install_requires
+      install_requires=install_requires
 )
 
