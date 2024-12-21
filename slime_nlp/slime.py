@@ -114,6 +114,18 @@ class ExplainModel:
         
     
     def explain(self, text):
+
+        '''
+        - explain: (text)
+          -- text (str): text as string format.
+        
+          Returns a dictionary with 
+          > input_ids (Tensor[int]): sequence of special tokens IDs.
+          > token_list (List[str]): of tokens.
+          > attributions (Tensor[float]): Integrated Gradient's attribution score by token.
+          > delta (Tensor[float]): Integrated Gradient's error metric.
+        
+        '''
         
         input_ids = self.tokenizer.encode(text, max_length=self.max_length, truncation=True, padding=True)        
         
@@ -140,6 +152,16 @@ class ExplainModel:
         
     
     def model_prediction(self, input_ids):
+
+        '''
+        - model_prediction: (input_ids)
+          -- input_ids (Tensor): sequence of special tokens IDs.
+        
+          Returns a dictionary with
+          > prob (float): classification probability score in [0, 1].
+          > class (int): classification integer score 0 or 1.
+        
+        '''
         
         pred = self.model(input_ids)
         pred = pred[0,0].detach().cpu()
@@ -151,6 +173,17 @@ class ExplainModel:
     
     def visualize(self, data, cmap_size=20, colors=["#73949e", "white", "#e2a8a7"], path_name=None):
 
+        '''
+        - visualize: (data, cmap_size=20, colors=["#73949e", "white", "#e2a8a7"], path_name=None)
+          -- data (DataFrame): pandas dataframe with "text" and "group" columns.
+          -- cmap_size (int): color-map discretization size.
+          -- colors (List[str]): list of color in hex for color-map.
+          -- path_name (str): string with the path and figure's name for output saving.
+        
+          Returns the tokenized text with attribution score by token.
+        
+        '''
+        
         ids = data['id'].tolist()
         texts = data['text'].tolist()
         groups = data['group'].tolist()
@@ -216,11 +249,28 @@ class ExplainModel:
 
     
     def attribution_by_token(self, data, path_name=None, return_results=False):
+
+        '''
+        - attribution_by_token: (data, path_name=None, return_results=False):
+          -- data (DataFrame): pandas dataframe with "id", "text", and "group" columns.
+          -- path_name (str): string with path and dataframe's names for saving.
+          -- return_results (bool): boolean variable for returning dataframe.
+        
+          Returns a dataframe with 
+          > id (str): text's ID.
+          > condition (str): string to indicate "condition" or "control" group.
+          > group (int): integer corresponding to the condition label (0 or 1).
+          > pred_label (int): model's prediction group (0 or 1).
+          > score (float): the sum of the text's attribution values.
+          > attribution (float): token's attribution value.
+          > token (str): token.
     
+        '''
+        
         N = len(data)
         output = pd.DataFrame()
         
-        ids = data['ids'].tolist()
+        ids = data['id'].tolist()
         groups = data['group'].tolist()
         texts = data['text'].tolist()
         
@@ -258,6 +308,43 @@ class ExplainModel:
 
 
 class Stat:
+
+    '''
+    # Stat: .....
+
+    Input: (path_data, features, rand_value=5000, path_results=None)
+    -----
+    - path_data (str): string with path and dataset name. This file is the user-dependent tagger output, 
+    containing columns for tokens and associated features.
+    - features (List): list of features processed by the user-dependent tagger statistical computation. 
+    Use Ellipsis (...) for considering an specific feature and its following ones, e.g, 
+    features=["BigWords", ...].
+    - rand_value (int): number of random subsamples of data. 
+    - path_results (str): string with path and dataframe results' name for saving in .csv file.
+
+
+    Methods:
+    -------
+    - plot_dist: (features, path_plot=None)
+      -- features (List): list of features processed by the user-dependent tagger for visualization. Use 
+      Ellipsis (...) for considering an specific feature and its following ones, e.g, 
+      features=["BigWords", ...].
+      -- path_plot (str): string with path and plots' name for saving in .png file.
+
+      Returns ......
+      
+    - plot_scatter: (path_plot=None)
+      -- path_plot (str): string with path and plots' name for saving in .png file.
+
+      Returns ......
+
+    - plot_bars: (path_plot=None)
+      -- path_plot (str): string with path and plots' name for saving in .png file.
+
+      Returns ......
+
+      
+    '''
 
     def __init__(self, path_data, features, rand_value=5000, path_results=None):
         
@@ -314,24 +401,22 @@ class Stat:
             
             realp = metrics.auc(fpr, tpr)
             by_feature[i]['realp'] = realp
-            results['AUC'] = realp
+            results['AUC'].append(realp)
                         
             auc_random_dist = np.zeros(rand_value)
             
             for j in range(rand_value):
                 data['temp'] = data.attribution*np.random.permutation(mask)
-                
                 mean = data.groupby(['id']).mean()['temp'].to_numpy()
                 
                 fpr, tpr, thresholds = metrics.roc_curve(median, mean)
-                
                 auc_random_dist[j] = metrics.auc(fpr, tpr)
 
             by_feature[i]['auc_random_dist'] = auc_random_dist
             
             results['percentile'].append(ECDF(auc_random_dist)(realp))
             results['AUC_random'].append(np.percentile(auc_random_dist, 50))
-            results['AUC_diff'].append(results['AUC'] - results['AUC_random'])
+            results['AUC_diff'].append(results['AUC'][-1] - results['AUC_random'][-1])
             
             if (realp > np.percentile(auc_random_dist, 95)):
                 results['AUC_impact'].append('positive')
