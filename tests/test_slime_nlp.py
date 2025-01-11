@@ -6,9 +6,10 @@ from slime_nlp.model import CustomModel
 from slime_nlp.slime import ExplainModel
 from slime_nlp.slime import Stat
 
+
 def test_version():
     assert __version__ == '0.1.0'
-    
+
 def test_slime():
     
     # test dataframe import:
