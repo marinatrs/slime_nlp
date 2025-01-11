@@ -310,7 +310,7 @@ class ExplainModel:
 class Stat:
 
     '''
-    # Stat: .....
+    # Stat: Statistical analysis for token attributions.
 
     Input: (path_data, features, rand_value=5000, path_results=None)
     -----
@@ -331,19 +331,19 @@ class Stat:
       features=["BigWords", ...].
       -- path_plot (str): string with path and plots' name for saving in .png file.
 
-      Returns ......
-      
+      Returns distribution density plots of feature attributions across all tokens to assess group 
+      relevance.
+
     - plot_scatter: (path_plot=None)
       -- path_plot (str): string with path and plots' name for saving in .png file.
 
-      Returns ......
+      Returns a plots with all linguistic features distinguishing from the AUC median of random subsamples.
 
     - plot_bars: (path_plot=None)
       -- path_plot (str): string with path and plots' name for saving in .png file.
 
-      Returns ......
-
-      
+      Returns a bar plot as an alternative visualization from the scatter plot.
+            
     '''
 
     def __init__(self, path_data, features, rand_value=5000, path_results=None):
@@ -436,7 +436,19 @@ class Stat:
 
     
     def plot_dist(self, features, path_plot=None):
+
+        '''
+        - plot_dist: (features, path_plot=None)
+          -- features (List): list of features processed by the user-dependent tagger for visualization. Use 
+          Ellipsis (...) for considering an specific feature and its following ones, e.g, 
+          features=["BigWords", ...].
+          -- path_plot (str): string with path and plots' name for saving in .png file.
     
+          Returns distribution density plots of feature attributions across all tokens to assess group 
+          relevance.
+    
+        '''
+        
         for i in features:
             
             fig, axs = plt.subplots(2, 2, figsize=(14, 12))
@@ -496,7 +508,15 @@ class Stat:
 
 
     def plot_scatter(self, path_plot=None):
+
+        '''
+        - plot_scatter: (path_plot=None)
+          -- path_plot (str): string with path and plots' name for saving in .png file.
     
+          Returns a plots with all linguistic features distinguishing from the AUC median of random subsamples.
+
+        '''
+        
         plt.figure(figsize=(14, 9), facecolor='white')
         sns.set_theme(context='talk', style='white')
         
@@ -548,7 +568,15 @@ class Stat:
 
     
     def plot_bars(self, path_plot=None):
+
+        '''
+        - plot_bars: (path_plot=None)
+          -- path_plot (str): string with path and plots' name for saving in .png file.
     
+          Returns a bar plot as an alternative visualization from the scatter plot.
+
+        '''
+        
         sns.set_theme(context='talk', style='white') 
         
         def get_color(row):
