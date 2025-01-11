@@ -1,0 +1,14 @@
+cff-version: 0.1.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Marina"
+  given-names: "Ribeiro"
+  orcid: "https://orcid.org/0000-0002-2516-3135"
+- family-names: "Tibério"
+  given-names: "Pereira"
+  orcid: "https://orcid.org/0000-0003-1856-6881"
+title: "SLIME-NLP"
+version: 0.1.0
+doi: 10.5281/zenodo.14633195
+date-released: 2025-01-11
+url: "https://github.com/marinatrs/slime_nlp/"
