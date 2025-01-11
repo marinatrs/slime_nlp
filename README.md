@@ -1,5 +1,7 @@
 # __Statistical and Linguistic Insights for Model Explanation - SLIME__ 
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14633195.svg)](https://doi.org/10.5281/zenodo.14633195)
+
 __SLIME__ (_Statistical and Linguistic Insights for Model Explanation_) is an explainable AI pipeline designed to enhance the interpretability of Large Language Models (LLMs) by identifying and explaining the lexical features that drive model decisions. Originally developed to study speech patterns in neurological disorders such as Alzheimer’s Disease (AD), SLIME provides insights into the relationship between lexical components and LLM classifications, making it a valuable tool for clinical and linguistic research.
 
 <p float="central">
