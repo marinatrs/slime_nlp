@@ -4,7 +4,7 @@ __SLIME__ (_Statistical and Linguistic Insights for Model Explanation_) is an ex
 
 <p float="central">
   <img src="figs/exp_S118.png" width="400"/>
-  <img src="figs/exp_S177.png" width="40#0"/>  
+  <img src="figs/exp_S177.png" width="400"/>  
 </p>
 
 ## Installation
