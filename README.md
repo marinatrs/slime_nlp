@@ -25,9 +25,9 @@ The project is composed of three main [codes](https://github.com/marinatrs/slime
 Check the tutorials in [docs](https://github.com/marinatrs/slime_nlp/tree/main/docs).
 
 
-## Reference
+## References
 
-The paper is currently in the submission process.
+The paper is currently under submission process.
 
 #### About the authors
 - [[ORCID] Marina Ribeiro](https://orcid.org/0000-0002-2516-3135)
