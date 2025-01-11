@@ -4,7 +4,7 @@ __SLIME__ (_Statistical and Linguistic Insights for Model Explanation_) is an ex
 
 <p float="central">
   <img src="figs/exp_S118.png" width="400"/>
-  <img src="figs/exp_S177.png" width="400"/>  
+  <img src="figs/exp_S177.png" width="40#0"/>  
 </p>
 
 ## Installation
@@ -29,6 +29,6 @@ Check the tutorials in [docs](https://github.com/marinatrs/slime_nlp/tree/main/d
 
 The paper is currently in the submission process.
 
-### About the authors
+#### About the authors
 - [[ORCID] Marina Ribeiro](https://orcid.org/0000-0002-2516-3135)
 - [[ORCID] Tibério Pereira](https://orcid.org/0000-0003-1856-6881)
