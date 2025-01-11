@@ -3,8 +3,8 @@
 __SLIME__ (_Statistical and Linguistic Insights for Model Explanation_) is an explainable method designed to identify lexical components in speech that are representative of neurological disorders, such as Alzheimer's Disease (AD), and to clarify their importance in a Large Language Model (LLM) decisions. This methodology employs a pipeline combining Integrated Gradients (IG) and statistical analysis to reveal how an LLM classifies speech as indicative of AD or control groups. By highlighting features such as reductions in social references common in AD, SLIME enhances the interpretability and accuracy of LLMs, providing a reliable tool for studying neurodegeneration and increasing confidence in applying LLMs in clinical neurological contexts.
 
 <p float="central">
-  <img src="figs/exp_S118.png" width="450"/>
-  <img src="figs/exp_S177.png" width="450"/>  
+  <img src="figs/exp_S118.png" width="400"/>
+  <img src="figs/exp_S177.png" width="400"/>  
 </p>
 
 ## Installation
