@@ -9,7 +9,7 @@ __SLIME__ (_Statistical and Linguistic Insights for Model Explanation_) is an ex
 
 ## Installation
 
-To install SLIME, we can use pip **command**:
+To install SLIME, we can use pip [command](https://pypi.org/project/slime-nlp/):
 
 ```bash
 pip install slime_nlp
